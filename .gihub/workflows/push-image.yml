@@ -13,7 +13,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  deploy-application:
+  deploy-app:
     runs-on: ubuntu-latest
 
     steps:

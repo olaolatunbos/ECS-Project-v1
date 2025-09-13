@@ -1,0 +1,21 @@
+name: Build and Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "memos/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  deploy-flask:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3

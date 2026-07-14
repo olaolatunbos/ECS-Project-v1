@@ -1,0 +1,34 @@
+# Local .terraform directories
+**/.terraform/*
+
+# Local workspace state directories (state lives in the S3 backend)
+terraform.tfstate.d/
+
+# State files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# tfvars files may contain secrets — commit an example instead
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Saved plan output
+*.tfplan
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Keep the dependency lock file committed:
+# .terraform.lock.hcl is intentionally NOT ignored

@@ -6,7 +6,11 @@ on:
     branches:
       - main
 
-
+# gitleaks-action lists PR commits via the API on pull_request events,
+# which requires pull-requests: read on the GITHUB_TOKEN.
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   static-analysis:

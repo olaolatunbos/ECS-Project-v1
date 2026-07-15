@@ -62,7 +62,7 @@ variable "private_subnet_ids" {
 variable "container_port" {
   description = "Port the application container listens on"
   type        = number
-  default     = 80
+  default     = 3000
 }
 
 variable "task_cpu" {

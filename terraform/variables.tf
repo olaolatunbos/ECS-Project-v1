@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "name" {
   description = "Name prefix applied across the VPC, ALB, and ECS resources"
   type        = string
-  default     = "ecs-project"
+  default     = "prj1"
 }
 
 variable "ecr_repository_name" {
@@ -30,8 +30,5 @@ variable "image_tag" {
 variable "container_port" {
   description = "Port the application container listens on (matches the Flask app)"
   type        = number
-  default     = 80
+  default     = 3000
 }
-
-# desired_count, task_cpu, and task_memory are defined per-workspace in
-# locals.tf (local.workspace_config), so they are not root variables.

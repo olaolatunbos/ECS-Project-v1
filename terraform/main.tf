@@ -19,7 +19,7 @@ module "alb" {
   name              = local.name
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
-  listener_port     = 80
+  listener_port     = 3000
   target_port       = var.container_port
   health_check_path = "/"
 }

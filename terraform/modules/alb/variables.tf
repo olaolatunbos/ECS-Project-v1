@@ -23,7 +23,7 @@ variable "internal" {
 variable "listener_port" {
   description = "Port the ALB listener accepts traffic on"
   type        = number
-  default     = 80
+  default     = 3000
 }
 
 variable "ingress_cidr_blocks" {
@@ -35,7 +35,7 @@ variable "ingress_cidr_blocks" {
 variable "target_port" {
   description = "Port the target group forwards traffic to on the ECS tasks"
   type        = number
-  default     = 80
+  default     = 3000
 }
 
 variable "health_check_path" {

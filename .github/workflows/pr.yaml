@@ -135,7 +135,7 @@ jobs:
         if: always()
         with:
           name: trivy-image-scan
-          path: trivy-report.txt
+          path: trivy-results.txt
 
 
 

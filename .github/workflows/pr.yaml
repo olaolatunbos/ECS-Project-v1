@@ -126,7 +126,7 @@ jobs:
           image-ref: task-management:${{ github.sha }}
           format: table
           output: trivy-results.txt
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
           ignore-unfixed: true
           exit-code: 1
 

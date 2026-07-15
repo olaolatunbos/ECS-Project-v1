@@ -121,20 +121,19 @@ jobs:
         run: docker build -t task-management:${{ github.sha }} ./app
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: task-management:${{ github.sha }}
-          format: table
-          output: trivy-report.txt
+          format: sarif
+          output: trivy-report.sarif
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: 1
 
-      - name: Upload Trivy scan report
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
         with:
-          name: trivy-image-scan
-          path: trivy-report.txt
+          sarif_file: 'trivy-results.sarif'
+
 
 

@@ -5,11 +5,14 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches: [main]
 
 
 permissions:
   contents: read
   pull-requests: read
+  id-token: write  
 
 jobs:
   static-analysis:
@@ -136,6 +139,38 @@ jobs:
         with:
           name: trivy-image-scan
           path: trivy-results.txt
+
+  docker-push:
+    name: Push to ECR
+    runs-on: ubuntu-latest
+    needs: [static-analysis, test, security, docker-build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'  
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actionS
+          aws-region: eu-west-2    
+
+      - name: Log in to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          REPOSITORY: task-management
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest ./app
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY:latest
+
+      
+
 
 
 

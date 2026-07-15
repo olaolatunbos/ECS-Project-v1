@@ -1,7 +1,7 @@
 module "ecr" {
   source = "./modules/ecr"
 
-  name = var.ecr_repository_name
+  name = local.env.ecr_repository_name
 }
 
 module "vpc" {
@@ -21,7 +21,7 @@ module "alb" {
   public_subnet_ids = module.vpc.public_subnet_ids
   listener_port     = 80
   target_port       = var.container_port
-  health_check_path = "/"
+  health_check_path = "/health"
 }
 
 module "ecs" {
@@ -29,8 +29,8 @@ module "ecs" {
 
   cluster_name = local.name
 
-  image_repository_url = var.image_repository_url
-  image_tag            = var.image_tag
+  image_repository_url = local.env.image_repository_url
+  image_tag            = local.env.image_tag
 
   vpc_id             = module.vpc.vpc_id
   vpc_cidr           = module.vpc.vpc_cidr

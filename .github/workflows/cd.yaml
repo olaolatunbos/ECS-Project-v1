@@ -115,5 +115,59 @@ jobs:
           done
           echo "Smoke test failed ❌: $BASE/health did not return 200"
           exit 1
+  
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: smoke-test
+    environment: production
+
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Resolve latest image from ECR
+        id: fetch-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          DIGEST=$(aws ecr describe-images \
+            --repository-name "${{ vars.ECR_REPOSITORY }}" \
+            --image-ids imageTag=latest \
+            --query 'imageDetails[0].imageDigest' \
+            --output text)
+          echo "image=$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}@$DIGEST" >> "$GITHUB_OUTPUT"
+
+      # Pull the CURRENT task definition live from ECS so you don't have to
+      # commit a task-definition.json to the repo.
+      - name: Download current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition "${{ vars.TASK_DEFINITION_FAMILY }}" \
+            --query 'taskDefinition' \
+            --output json > task-definition.json
+
+      - name: Render new task definition with the new image
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ vars.CONTAINER_NAME }}
+          image: ${{ steps.fetch-image.outputs.image }}
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          wait-for-service-stability: true
 
 

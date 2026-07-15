@@ -9,6 +9,9 @@ locals {
       desired_count        = 1
       task_cpu             = "256"
       task_memory          = "512"
+      image_repository_url = "801497981564.dkr.ecr.eu-west-2.amazonaws.com/staging/task-management"
+      image_tag            = "latest"
+      ecr_repository_name  = "staging/task-management"
     }
     production = {
       vpc_cidr             = "10.20.0.0/16"
@@ -17,6 +20,9 @@ locals {
       desired_count        = 3
       task_cpu             = "512"
       task_memory          = "1024"
+      image_repository_url = "801497981564.dkr.ecr.eu-west-2.amazonaws.com/production/task-management"
+      image_tag            = "latest"
+      ecr_repository_name  = "production/task-management"
     }
   }
 

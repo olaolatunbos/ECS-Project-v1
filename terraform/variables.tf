@@ -10,22 +10,6 @@ variable "name" {
   default     = "prj1"
 }
 
-variable "ecr_repository_name" {
-  description = "Name of the ECR repository to create (matches the repo CI pushes to)"
-  type        = string
-  default     = "ecs/task-management"
-}
-
-variable "image_repository_url" {
-  description = "ECR Public repository URI to pull the container image from, e.g. public.ecr.aws/<alias>/<repository>"
-  type        = string
-}
-
-variable "image_tag" {
-  description = "Tag of the container image to deploy"
-  type        = string
-  default     = "latest"
-}
 
 variable "container_port" {
   description = "Port the application container listens on (matches the Flask app)"

@@ -162,12 +162,23 @@ jobs:
       - name: Build and push
         env:
           REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-          REPOSITORY: ecs/task-management
+          STAGING_REPOSITORY: staging/task-management
+          PRODUCTION_REPOSITORY: production/task-management
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest ./app
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY:latest
+          # Build once, tag for both the staging and production ECR repos
+          # (same registry/account), then push all tags.
+          docker build \
+            -t $REGISTRY/$STAGING_REPOSITORY:$IMAGE_TAG \
+            -t $REGISTRY/$STAGING_REPOSITORY:latest \
+            -t $REGISTRY/$PRODUCTION_REPOSITORY:$IMAGE_TAG \
+            -t $REGISTRY/$PRODUCTION_REPOSITORY:latest \
+            ./app
+
+          docker push $REGISTRY/$STAGING_REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/$STAGING_REPOSITORY:latest
+          docker push $REGISTRY/$PRODUCTION_REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/$PRODUCTION_REPOSITORY:latest
 
       
 

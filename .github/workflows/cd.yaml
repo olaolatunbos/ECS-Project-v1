@@ -1,8 +1,13 @@
 name: Continous Delivery Workflow
 
 on:
-  push:
-    branches: [ main ]
+  # Run only after the CI workflow completes on main (chained via workflow_run).
+  workflow_run:
+    workflows: ["Continuous Integration Workflow"]
+    types:
+      - completed
+    branches:
+      - main
   workflow_dispatch:        # allow manual runs from the Actions tab
 
 env:
@@ -18,6 +23,11 @@ jobs:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     environment: staging
+    # workflow_run fires on completion regardless of result — only deploy when
+    # CI actually passed (or when triggered manually).
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
 
     steps:
 

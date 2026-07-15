@@ -13,7 +13,7 @@ variable "container_insights" {
 variable "container_name" {
   description = "Name of the container in the task definition"
   type        = string
-  default     = "first"
+  default     = "app"
 }
 
 variable "task_family" {

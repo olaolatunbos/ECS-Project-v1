@@ -4,3 +4,13 @@ repos:
     rev: v8.18.0
     hooks:
       - id: gitleaks
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.108.0
+    hooks:
+      # Rewrites *.tf to canonical format (terraform fmt).
+      - id: terraform_fmt
+      # Static analysis / linting of Terraform (requires tflint installed).
+      - id: terraform_tflint
+      # Security/misconfiguration scanning of Terraform (requires trivy installed).
+      - id: terraform_trivy

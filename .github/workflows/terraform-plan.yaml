@@ -40,6 +40,10 @@ jobs:
         id: init
         run: terraform init
 
+      - name: Select Workspace
+        id: workspace
+        run: terraform workspace select -or-create ${{ matrix.environment }}
+
       - name: Terraform Fmt
         id: fmt
         run: terraform fmt -check
@@ -47,10 +51,6 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-
-      - name: Select Workspace
-        id: workspace
-        run: terraform workspace select -or-create ${{ matrix.environment }}
 
       - name: Run Checkov Scan
         uses: bridgecrewio/checkov-action@v12

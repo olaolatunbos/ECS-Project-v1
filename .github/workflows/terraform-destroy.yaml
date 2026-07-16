@@ -11,10 +11,6 @@ on:
           - staging
           - production
         required: true
-      confirm:
-        description: "Type the environment name exactly to confirm destruction"
-        type: string
-        required: true
 
 permissions:
   contents: read

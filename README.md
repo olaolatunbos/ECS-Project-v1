@@ -11,6 +11,8 @@ A Flask task-management (Todo) app deployed to **AWS ECS Fargate** behind an App
 
 ## Application
 
+![Application screenshot](images/application.png)
+
 ### API
 
 | Method | Path              | Description                          |

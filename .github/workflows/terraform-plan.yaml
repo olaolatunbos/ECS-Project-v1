@@ -36,10 +36,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
           aws-region: eu-west-2
 
-      - name: Select Workspace
-        id: workspace
-        run: terraform workspace select -or-create ${{ matrix.environment }}
-
       - name: Terraform Init
         id: init
         run: terraform init
@@ -51,6 +47,10 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+
+      - name: Select Workspace
+        id: workspace
+        run: terraform workspace select -or-create ${{ matrix.environment }}
 
       - name: Run Checkov Scan
         uses: bridgecrewio/checkov-action@v12

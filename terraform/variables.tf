@@ -18,7 +18,7 @@ variable "hosted_zone_name" {
 
 
 variable "container_port" {
-  description = "Port the application container listens on (matches the Flask app)"
+  description = "Port the application container listens on"
   type        = number
   default     = 3000
 }

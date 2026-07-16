@@ -9,7 +9,7 @@ output "alb_dns_name" {
 }
 
 output "vpc_id" {
-  description = "ID of the VPC"
+  description = "ID of the Virtual Private Cloud (VPC)"
   value       = module.vpc.vpc_id
 }
 

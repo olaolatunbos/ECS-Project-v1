@@ -1,4 +1,4 @@
-# Flow logs intentionally omitted for this environment.
+# Flow logs intentionally omitted for this environment
 #trivy:ignore:AWS-0178
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr

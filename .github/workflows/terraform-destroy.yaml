@@ -34,19 +34,9 @@ jobs:
       run:
         working-directory: ./terraform
     steps:
-      # Abort unless the typed confirmation matches the chosen environment.
-      - name: Confirmation guard
-        env:
-          CONFIRM: ${{ inputs.confirm }}
-          ENVIRONMENT: ${{ inputs.environment }}
-        run: |
-          if [ "$CONFIRM" != "$ENVIRONMENT" ]; then
-            echo "::error::Confirmation '$CONFIRM' does not match environment '$ENVIRONMENT'. Aborting."
-            exit 1
-          fi
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4

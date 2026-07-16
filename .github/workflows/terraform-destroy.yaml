@@ -1,0 +1,68 @@
+name: Terraform Destroy
+
+# Manual only — never triggered automatically. Destroys an environment's infra.
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Workspace/environment to destroy"
+        type: choice
+        options:
+          - staging
+          - production
+        required: true
+      confirm:
+        description: "Type the environment name exactly to confirm destruction"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  id-token: write # OIDC auth to AWS
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  terraform-destroy:
+    name: Terraform Destroy (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    # Ties into GitHub Environment protection rules — add required reviewers
+    # on the `production` environment to force a manual approval before destroy.
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      # Abort unless the typed confirmation matches the chosen environment.
+      - name: Confirmation guard
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          if [ "$CONFIRM" != "$ENVIRONMENT" ]; then
+            echo "::error::Confirmation '$CONFIRM' does not match environment '$ENVIRONMENT'. Aborting."
+            exit 1
+          fi
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      # Fail if the workspace does not exist (never create-then-destroy nothing).
+      - name: Select Workspace
+        run: terraform workspace select ${{ inputs.environment }}
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -no-color

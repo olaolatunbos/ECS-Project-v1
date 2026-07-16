@@ -10,6 +10,12 @@ variable "name" {
   default     = "prj1"
 }
 
+variable "hosted_zone_name" {
+  description = "Route53 hosted zone the app hostnames live under"
+  type        = string
+  default     = "olaolat.com"
+}
+
 
 variable "container_port" {
   description = "Port the application container listens on (matches the Flask app)"

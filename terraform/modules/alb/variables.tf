@@ -20,10 +20,15 @@ variable "internal" {
   default     = false
 }
 
-variable "listener_port" {
-  description = "Port the ALB listener accepts traffic on"
-  type        = number
-  default     = 3000
+variable "certificate_arn" {
+  description = "ARN of the ACM certificate to attach to the HTTPS (443) listener"
+  type        = string
+}
+
+variable "ssl_policy" {
+  description = "SSL/TLS security policy for the HTTPS listener"
+  type        = string
+  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
 }
 
 variable "ingress_cidr_blocks" {

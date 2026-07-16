@@ -12,6 +12,7 @@ locals {
       image_repository_url = "801497981564.dkr.ecr.eu-west-2.amazonaws.com/staging/task-management"
       image_tag            = "latest"
       ecr_repository_name  = "staging/task-management"
+      hostname             = "staging.olaolat.com"
     }
     production = {
       vpc_cidr             = "10.20.0.0/16"
@@ -23,6 +24,7 @@ locals {
       image_repository_url = "801497981564.dkr.ecr.eu-west-2.amazonaws.com/production/task-management"
       image_tag            = "latest"
       ecr_repository_name  = "production/task-management"
+      hostname             = "app.olaolat.com"
     }
   }
 

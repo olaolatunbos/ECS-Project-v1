@@ -13,21 +13,40 @@ module "vpc" {
   private_subnet_cidrs = local.env.private_subnet_cidrs
 }
 
+module "certificate" {
+  source = "./modules/certificate"
+
+  domain_name      = local.env.hostname
+  hosted_zone_name = var.hosted_zone_name
+}
+
 module "alb" {
   source = "./modules/alb"
 
   name              = local.name
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
-  listener_port     = 80
+  certificate_arn   = module.certificate.certificate_arn
   target_port       = var.container_port
   health_check_path = "/health"
+}
+
+# Point the workspace's hostname at the ALB.
+module "dns" {
+  source = "./modules/dns"
+
+  zone_id        = module.certificate.zone_id
+  record_name    = local.env.hostname
+  alias_dns_name = module.alb.alb_dns_name
+  alias_zone_id  = module.alb.alb_zone_id
 }
 
 module "ecs" {
   source = "./modules/ecs"
 
   cluster_name = local.name
+  task_family  = "${local.name}-task"
+  service_name = "${local.name}-service"
 
   image_repository_url = local.env.image_repository_url
   image_tag            = local.env.image_tag

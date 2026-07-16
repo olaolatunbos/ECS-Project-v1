@@ -1,6 +1,6 @@
 output "app_url" {
-  description = "URL to reach the application through the ALB"
-  value       = "http://${module.alb.alb_dns_name}"
+  description = "HTTPS URL to reach the application"
+  value       = "https://${local.env.hostname}"
 }
 
 output "alb_dns_name" {

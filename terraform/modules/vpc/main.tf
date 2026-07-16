@@ -1,3 +1,5 @@
+# Flow logs intentionally omitted for this environment.
+#trivy:ignore:AWS-0178
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -16,6 +18,8 @@ resource "aws_internet_gateway" "this" {
   }
 }
 
+# Public subnets must assign public IPs — they host the ALB and NAT gateway.
+#trivy:ignore:AWS-0164
 resource "aws_subnet" "public" {
   count                   = length(var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.this.id

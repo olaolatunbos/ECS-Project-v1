@@ -20,7 +20,10 @@ resource "aws_security_group" "this" {
     cidr_blocks = [var.vpc_cidr]
   }
 
+  # Open egress required: Fargate tasks pull images and reach AWS APIs via NAT.
+  #trivy:ignore:AWS-0104
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"

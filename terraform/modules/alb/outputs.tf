@@ -23,7 +23,12 @@ output "security_group_id" {
   value       = aws_security_group.alb.id
 }
 
-output "listener_arn" {
-  description = "ARN of the ALB HTTP listener"
-  value       = aws_lb_listener.this.arn
+output "https_listener_arn" {
+  description = "ARN of the ALB HTTPS listener"
+  value       = aws_lb_listener.https.arn
+}
+
+output "http_listener_arn" {
+  description = "ARN of the ALB HTTP (redirect) listener"
+  value       = aws_lb_listener.http.arn
 }

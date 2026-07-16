@@ -1,0 +1,40 @@
+name: Terraform Plan
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write 
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Runs init + plan and posts/updates the plan as a PR comment.
+      # Pinned to the v2.2.3 commit SHA (third-party action).
+      - name: Terraform Plan
+        uses: dflook/terraform-plan@7878bff63e2099cdc9be9a6f33cbbbf687f8f0fe
+        with:
+          path: terraform
+          workspace: staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

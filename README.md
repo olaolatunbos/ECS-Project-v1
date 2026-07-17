@@ -4,6 +4,7 @@ A Flask task-management (Todo) app deployed to **AWS ECS Fargate** behind an App
 
 ## Architecture
 
+![AWS architecture](images/aws-architecture.png)
 
 - **Application** — [app/](app/): a Flask REST API with a small server-rendered UI. Task state is held **in memory** (a module-level dict), so it resets on restart; there is no database.
 - **Infrastructure** — [terraform/](terraform/): composed of `vpc`, `alb`, `ecs`, `ecr`, `certificate`, and `dns` modules under [terraform/modules/](terraform/modules/).
@@ -13,22 +14,6 @@ A Flask task-management (Todo) app deployed to **AWS ECS Fargate** behind an App
 
 ![Application screenshot](images/application.png)
 
-### API
-
-| Method | Path              | Description                          |
-|--------|-------------------|--------------------------------------|
-| GET    | `/`               | Serves the Todo web UI               |
-| GET    | `/health`         | Health check → `{"status": "ok"}`    |
-| GET    | `/tasks`          | List all tasks                       |
-| POST   | `/tasks`          | Create a task (`title` required)     |
-| GET    | `/tasks/<id>`     | Get a task by id                     |
-| PUT    | `/tasks/<id>`     | Update a task (partial updates ok)   |
-| DELETE | `/tasks/<id>`     | Delete a task                        |
-
-A task looks like:
-
-```json
-{ "id": "<uuid>", "title": "Buy milk", "description": "2%", "completed": false }
 ```
 
 ### Run locally
@@ -39,25 +24,8 @@ pip install -r requirements-dev.txt
 python app.py            # serves on http://localhost:3000
 ```
 
-Then open http://localhost:3000, or exercise the API:
+Then open http://localhost:3000
 
-```bash
-curl -s localhost:3000/health
-curl -s -X POST localhost:3000/tasks \
-  -H 'Content-Type: application/json' \
-  -d '{"title":"Buy milk","description":"2%"}'
-curl -s localhost:3000/tasks
-```
-
-### Test, lint, format
-
-```bash
-cd app
-pytest                                       # run the suite
-pytest --cov=app --cov-report=term           # with coverage
-pytest tests/test_app.py::test_create_task   # a single test
-ruff check --fix .                           # lint + autofix
-ruff format .                                # format
 ```
 
 ### Container
@@ -112,11 +80,4 @@ terraform/               Root module + backend/providers/locals
 .github/workflows/       CI, CD, and Terraform plan/apply/destroy pipelines
 ```
 
-## Contributing
-
-Pre-commit hooks ([.pre-commit-config.yaml](.pre-commit-config.yaml)) run gitleaks and Terraform `fmt` / `tflint` / `trivy` (tflint and trivy must be installed locally):
-
-```bash
-pre-commit install
-pre-commit run --all-files
 ```

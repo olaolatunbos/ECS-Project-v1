@@ -40,10 +40,10 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Formating
-        run: ruff format .
+        run: ruff format --check .
 
       - name: Linting
-        run: ruff check --fix .
+        run: ruff check .
 
   test:
     name: Test and Coverage

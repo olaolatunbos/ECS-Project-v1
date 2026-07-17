@@ -14,7 +14,8 @@ A Flask task-management (Todo) app deployed to **AWS ECS Fargate** behind an App
 
 ![Application screenshot](images/application.png)
 
-```
+
+
 
 ### Run locally
 
@@ -24,9 +25,8 @@ pip install -r requirements-dev.txt
 python app.py            # serves on http://localhost:3000
 ```
 
-Then open http://localhost:3000
+Then open http://localhost:3000, or exercise the API:
 
-```
 
 ### Container
 
@@ -78,6 +78,4 @@ app/                     Flask application, tests, Dockerfile
 terraform/               Root module + backend/providers/locals
   modules/               vpc, alb, ecs, ecr, certificate, dns
 .github/workflows/       CI, CD, and Terraform plan/apply/destroy pipelines
-```
-
 ```
